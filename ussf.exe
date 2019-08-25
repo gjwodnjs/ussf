@@ -1,0 +1,594 @@
+//////////////////////////////////////////////////////////////////////////////////
+
+Account Creation:
+
+//////////////////////////////////////////////////////////////////////////////////
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace PCHS
+{
+    public partial class AccountCreation : Form
+    {
+        string strUsername = "";
+        string strPassword = "";
+        bool ParentOrSchool = true;
+        string strFullString = "";
+        public AccountCreation(string FullString)
+        {
+            InitializeComponent();
+            strFullString = FullString;
+        }
+
+        private void BtnCreate_Click(object sender, EventArgs e)
+        {
+            if (rdbSchool.Checked == true)
+            {
+                ParentOrSchool = false;
+            }
+            strUsername = txtUsername.Text;
+            strPassword = txtPassword.Text;
+            this.Hide();
+            Login _login = new Login(strUsername, strPassword, ParentOrSchool, strFullString);
+            _login.ShowDialog();
+            //Login.
+            //    Application.Run(new Login(strUsername, strPassword));
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+Login:
+
+//////////////////////////////////////////////////////////////////////////////////
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace PCHS
+{
+    public partial class Login : Form
+    {
+        string LoginUser = "";
+        string LoginPass = "";
+        bool LoginParentOrSchool;
+        string FullString;
+        public Login(string LoginUsername, string LoginPassword, bool ParentOrSchool, string strFullString)
+        {
+            InitializeComponent();
+            LoginUser = LoginUsername;
+            LoginPass = LoginPassword;
+            LoginParentOrSchool = ParentOrSchool;
+            FullString = strFullString;
+        }
+
+        private void BtnLogin_Click(object sender, EventArgs e)
+        {
+            if (LoginParentOrSchool == true)
+            {
+                if (txtUsername.Text == LoginUser && txtPassword.Text == LoginPass)
+                {
+                    MainPage _mainPage = new MainPage(LoginUser, FullString);
+                    this.Hide();
+                    _mainPage.ShowDialog();
+                }
+            }
+            else
+            {
+                SchoolAccount schoolAccount = new SchoolAccount(LoginUser);
+                this.Hide();
+                schoolAccount.ShowDialog();
+            }
+
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+My Account:
+
+//////////////////////////////////////////////////////////////////////////////////
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace PCHS
+{
+    public partial class MyAccount : Form
+    {
+        string Username = "";
+        public MyAccount(string User, string School1, string School2, string School3, string School4)
+        {
+            InitializeComponent();
+            Username = User;
+            lblUsername.Text = "Username: " + Username;
+            textBox1.Text = School1;
+            textBox2.Text = School2;
+            textBox3.Text = School3;
+            textBox4.Text = School4;
+        }
+
+        private void BtnEdit_Click(object sender, EventArgs e)
+        {
+            textBox1.ReadOnly = false;
+            textBox2.ReadOnly = false;
+            textBox3.ReadOnly = false;
+            textBox4.ReadOnly = false;
+            btnSave.Enabled = true;
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            textBox1.ReadOnly = true;
+            textBox2.ReadOnly = true;
+            textBox3.ReadOnly = true;
+            textBox4.ReadOnly = true;
+            btnSave.Enabled = false;
+        }
+
+        private void BtnBack_Click(object sender, EventArgs e)
+        {
+            MainPage _mainPage = new MainPage(Username, null);
+            this.Hide();
+            _mainPage.ShowDialog();
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+School Account:
+
+//////////////////////////////////////////////////////////////////////////////////
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace PCHS
+{
+    public partial class SchoolAccount : Form
+    {
+        string SchoolName;
+        string strTypeOfSchool = "NaN";
+        bool PublicOrPrivate = false;
+        bool Music = false;
+        bool Robotics = false;
+        bool Sports = false;
+        bool Theater = false;
+        bool Government = false;
+        string User;
+        string FullString = "";
+        public SchoolAccount(string SchoolUsername)
+        {
+            InitializeComponent();
+            lblWelcome.Text = "Welcome " + SchoolUsername;
+        }
+
+        private void Logic(object sender, EventArgs e)
+        {
+            //This will set the Type of School
+            if (rdbElementary.Checked == true)
+            {
+                strTypeOfSchool = "Elementary School";
+            }
+            else if (rdbMiddleSchool.Checked == true)
+            {
+                strTypeOfSchool = "Middle School";
+            }
+            else if (rdbHighSchool.Checked == true)
+            {
+                strTypeOfSchool = "High School";
+            }
+
+            //This will set Public or Private
+            if (rdbPublic.Checked == true)
+            {
+                PublicOrPrivate = true;
+            }
+            else if (rdbPrivate.Checked == true)
+            {
+                PublicOrPrivate = false;
+            }
+
+            if (chkGovernment.Checked == true)
+            {
+                Government = true;
+            }
+
+            if (chkMusic.Checked == true)
+            {
+                Music = true;
+            }
+            if (chkRobotics.Checked == true)
+            {
+                Robotics = true;
+            }
+            if (chkSports.Checked == true)
+            {
+                Sports = true;
+            }
+            if (chkTheater.Checked == true)
+            {
+                Theater = true;
+            }
+        }
+
+        private void LocationText(object sender, EventArgs e)
+        {
+            txtLocation.Text = "";
+            txtLocation.ForeColor = System.Drawing.Color.Black;
+        }
+
+        private void SchoolNameText(object sender, EventArgs e)
+        {
+            txtName.Text = "";
+            txtName.ForeColor = System.Drawing.Color.Black;
+        }
+        string strPublicOrPrivate = null;
+        string strExtracurricular = null;
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            SchoolName = txtName.Text;
+            if (PublicOrPrivate == true)
+            {
+                strPublicOrPrivate = "Public_";
+            }
+            else
+            {
+                strPublicOrPrivate = "Private_";
+            }
+            if (Government == true)
+                strExtracurricular += "Government_";
+            if (Music == true)
+                strExtracurricular += "Music_";
+            if (Robotics == true)
+                strExtracurricular += "Robotics_";
+            if (Sports == true)
+                strExtracurricular += "Sports_";
+            if (Theater == true)
+                strExtracurricular += "Theater_";
+            FullString = SchoolName + "," + strPublicOrPrivate + strExtracurricular;
+        }
+
+        private void BtnLogOut_Click(object sender, EventArgs e)
+        {
+            AccountCreation accountCreation = new AccountCreation(FullString);
+            this.Hide();
+            accountCreation.ShowDialog();
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+
+Main Page (School Finder):
+
+//////////////////////////////////////////////////////////////////////////////////
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace PCHS
+{
+    public partial class MainPage : Form
+    {
+        string strTypeOfSchool = "NaN";
+        string strLocation = "NaN";
+        bool PublicOrPrivate = false;
+        bool Music = false;
+        bool Robotics = false;
+        bool Sports = false;
+        bool Theater = false;
+        bool Government = false;
+        string User = "";
+        string strNoSchoolFound = "No School Found with Given Properties";
+        string stringBeforeChar = "";
+        string strFullString = null;
+        public MainPage(string Username, string FullString)
+        {
+            InitializeComponent();
+            User = Username;
+            lblWelcome.Text = "Welcome " + User;
+            strFullString = FullString;
+        }
+
+        private void Logic (object sender, EventArgs e)
+        {
+            //This will set the Type of School
+            if (rdbElementary.Checked == true)
+            {
+                strTypeOfSchool = "Elementary School";
+            }
+            else if (rdbMiddleSchool.Checked == true)
+            {
+                strTypeOfSchool = "Middle School";
+            }
+            else if (rdbHighSchool.Checked == true)
+            {
+                strTypeOfSchool = "High School";
+            }
+
+            //This will set Public or Private
+            if (rdbPublic.Checked == true)
+            {
+                PublicOrPrivate = true;
+            }
+            else if (rdbPrivate.Checked == true)
+            {
+                PublicOrPrivate = false;
+            }
+
+            if (chkGovernment.Checked == true)
+            {
+                Government = true;
+            }
+
+            if (chkMusic.Checked == true)
+            {
+                Music = true;
+            }
+            if (chkRobotics.Checked == true)
+            {
+                Robotics = true;
+            }
+            if (chkSports.Checked == true)
+            {
+                Sports = true;
+            }
+            if (chkTheater.Checked == true)
+            {
+                Theater = true;
+            }
+        }
+
+        private void Go(object sender, EventArgs e)
+        {
+            PublicOrPrivate = false;
+            Music = false;
+            Robotics = false;
+            Sports = false;
+            Theater = false;
+            Government = false;
+            Logic(sender, e);
+            lstBoxTest.Items.Clear();
+            List<string> SchoolList = new List<string>();
+            SchoolList.Add("ParkingSpot Elementary,Private_Music_Sports");
+            SchoolList.Add("Mayo Middle,Public_Music_Sports");
+            SchoolList.Add("Lamp High,Public_Government_Music_Robotics");
+
+            SchoolList.Add("PurpleBrick Elementary,Public_Music_Theater");
+            SchoolList.Add("Hart Middle,Public_Sports_Government");
+            SchoolList.Add("RaspberryPi High,Private_Government_Robotics");
+
+            SchoolList.Add("Wilson Elementary,Public_Sports_Theater");
+            SchoolList.Add("Greenville Middle,Public_Government_Music_Robotics_Theater_Sports");
+            SchoolList.Add("Fallon High,Private_Music_Government_Robotics_Theater");
+
+            SchoolList.Add("Converse Elementary,Private_Sports_Music");
+            SchoolList.Add("Carnegie Middle,Private_Government_Music_Theater_Sports");
+            SchoolList.Add("Thought High,Private_Theater_Sports_Music");
+
+            SchoolList.Add("Heaven Elementary,Public_Theater_Music");
+            SchoolList.Add("Johnny Middle,Private_Government_Music_Robotics_Theater_Sports");
+            SchoolList.Add("Smokey High,Public_Theater_Sports_Music_Robotics");
+
+            SchoolList.Add("Sprite Elementary,Public_Sports_Theater_Robotics_Music");
+            SchoolList.Add("Keebler Middle,Private_Theater_Sports");
+            SchoolList.Add("Scarytown High,Public_Theater_Government_Sports_Music");
+
+            SchoolList.Add(strFullString);
+            //This will set the Location of the school
+            strLocation = txtLocation.Text;
+            //This will add properties to the listbox
+            //Type of School
+            if (strTypeOfSchool == "Elementary School")
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (SchoolList[j].Contains("Middle") || SchoolList[j].Contains("High"))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+            else if (strTypeOfSchool == "Middle School")
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (SchoolList[j].Contains("Elementary") || SchoolList[j].Contains("High"))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+            else if (strTypeOfSchool == "High School")
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (SchoolList[j].Contains("Middle") || SchoolList[j].Contains("Elementary"))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+            else
+            {
+                lstBoxTest.Items.Add(strNoSchoolFound);
+            }
+            
+            //Public or Private
+            if (PublicOrPrivate == true)
+            {
+                for(int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (SchoolList[j].Contains("Private"))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+
+            }
+            else if (PublicOrPrivate == false)
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (SchoolList[j].Contains("Public"))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+
+            //Government
+            if (Government == true)
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (!(SchoolList[j].Contains("Government")))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+
+            //Theater
+            if (Theater == true)
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (!(SchoolList[j].Contains("Theater")))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+
+            //Music
+            if (Music == true)
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (!(SchoolList[j].Contains("Music")))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+
+            //Sports
+            if (Sports == true)
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (!(SchoolList[j].Contains("Sports")))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+
+            //Robotics
+            if (Robotics == true)
+            {
+                for (int j = 0; j < SchoolList.Count; j++)
+                {
+                    if (!(SchoolList[j].Contains("Robotics")))
+                    {
+                        SchoolList.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+
+            //Add to Output Box
+            for (int i = 0; i < SchoolList.Count; i++)
+            {
+                string testChar = "";
+                testChar = SchoolList[i];
+                stringBeforeChar = testChar.Substring(0, testChar.IndexOf(","));
+                lstBoxTest.Items.Add(stringBeforeChar);
+            }
+        }
+
+        private void LocationText(object sender, EventArgs e)
+        {
+            txtLocation.Text = "";
+            txtLocation.ForeColor = System.Drawing.Color.Black;
+        }
+
+        string SelectedSchool = "";
+        string SelectedSchool2 = "";
+        string SelectedSchool3 = "";
+        string SelectedSchool4 = "";
+
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            if ((SelectedSchool == ""))
+            SelectedSchool = lstBoxTest.SelectedItem.ToString();
+            else if ((SelectedSchool2 == ""))
+                SelectedSchool2 = lstBoxTest.SelectedItem.ToString();
+            else if ((SelectedSchool3 == ""))
+                SelectedSchool3 = lstBoxTest.SelectedItem.ToString();
+            else if ((SelectedSchool4 == ""))
+                SelectedSchool4 = lstBoxTest.SelectedItem.ToString();
+        }
+
+        private void BtnAccount_Click(object sender, EventArgs e)
+        {
+            MyAccount _myAccount = new MyAccount(User, SelectedSchool, SelectedSchool2, SelectedSchool3, SelectedSchool4);
+            this.Hide();
+            _myAccount.ShowDialog();
+        }
+    }
+}
+
